@@ -1,5 +1,8 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post } from '@nestjs/common'
 import { ChirpDto } from '../dto/ChirpDto'
+import { ChirpEntity } from '../../domain/entity/ChirpEntity'
+import { ChirpId } from '../../domain/value-object/ChirpId'
+import { ChirpMessage } from '../../domain/value-object/ChirpMessage'
 import { CreateChirp } from '../../application/use-case/CreateChirp'
 import { FindAllChirps } from '../../application/use-case/FindAllChirps'
 import { InvalidArgumentError } from '../../../shared/domain/error/InvalidArgumentError'
@@ -19,9 +22,16 @@ export class ChirpController {
   @Post()
   async create(@Body() chirpDto: ChirpDto) {
     try {
-      return this.createChirpUseCase.run(chirpDto)
+      const { id, message } = chirpDto
+      const savedChirp = await this.createChirpUseCase.run(new ChirpEntity(
+        new ChirpId(id),
+        new ChirpMessage(message),
+      ))
+      return savedChirp.toPrimitives()
     } catch (error) {
-      if (error instanceof InvalidArgumentError) throw new BadRequestException()
+      console.log(error)
+      if (error instanceof InvalidArgumentError) throw new BadRequestException(error.message)
+      throw new InternalServerErrorException(error.message)
     }
   }
 }

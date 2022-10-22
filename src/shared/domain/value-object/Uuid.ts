@@ -1,6 +1,6 @@
+import * as validate from 'uuid-validate'
 import { InvalidArgumentError } from '../error/InvalidArgumentError'
 import { v4 } from 'uuid'
-import validate from 'uuid-validate'
 
 export class Uuid {
   readonly value: string

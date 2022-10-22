@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ChirpEntity } from '../../domain/entity/interface/ChirpEntity';
-import { InvalidArgumentError } from '../../../shared/domain/error/InvalidArgumentError';
+import { ChirpAlreadyExistsError } from '../../domain/error/ChirpAlreadyExistsError';
+import { ChirpEntity } from '../../domain/entity/ChirpEntity';
 import { Repository } from "../../../shared/domain/repository/interface/Repository";
 
 @Injectable()
@@ -10,12 +10,15 @@ export class CreateChirp {
   ) {}
 
   async run(chirp: ChirpEntity): Promise<ChirpEntity> {
-    if (!chirp.id) {
-      throw new InvalidArgumentError('Chirp id is missing!')
-    }
-    if (!chirp.message) {
-      throw new InvalidArgumentError('Chirp message is missing!')
-    }
+    await this.ensureChirpDoesNotExist(chirp)
+
     return this.repository.save(chirp)
+  }
+
+  private async ensureChirpDoesNotExist(chirp: ChirpEntity) {
+    const foundChirps = await this.repository.find({ id: chirp.id.value })
+    if(foundChirps.length) {
+      throw new ChirpAlreadyExistsError(chirp)
+    }
   }
 }

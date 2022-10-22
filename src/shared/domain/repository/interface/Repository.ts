@@ -1,7 +1,7 @@
 import { Entity } from "../../entity/interface/Entity";
 
 export interface Repository<T extends Entity> {
-  find(): Promise<T[]>
+  find(filters?): Promise<T[]>
   save(entity: T): Promise<T>
 }
 
