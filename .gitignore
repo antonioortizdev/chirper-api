@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # JSON Repository DB file
 /src/chirp/infrastructure/json/file/
+
+# Environment variables
+.env
