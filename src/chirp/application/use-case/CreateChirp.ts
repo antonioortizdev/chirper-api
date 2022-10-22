@@ -4,7 +4,7 @@ import { InvalidArgumentError } from '../../../shared/domain/error/InvalidArgume
 import { Repository } from "../../../shared/domain/repository/interface/Repository";
 
 @Injectable()
-export class SaveChirp {
+export class CreateChirp {
   constructor(
     @Inject(Repository) private repository: Repository<ChirpEntity>
   ) {}
