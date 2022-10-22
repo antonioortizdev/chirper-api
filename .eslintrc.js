@@ -32,5 +32,6 @@ module.exports = {
         allowSeparatedGroups: false,
       },
     ],
+    'no-console': 'warn',
   },
 };
