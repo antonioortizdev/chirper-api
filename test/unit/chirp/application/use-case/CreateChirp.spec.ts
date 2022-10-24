@@ -10,10 +10,9 @@ describe('CreateChirp', () => {
   let createChirpUseCase: CreateChirp
   let chirp: ChirpEntity
   let repositoryMock: Repository<ChirpEntity>
-  let module: TestingModule
 
   const getUseCaseInstance = async (): Promise<CreateChirp> => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [CreateChirp, {
         provide: Repository,
         useValue: repositoryMock
