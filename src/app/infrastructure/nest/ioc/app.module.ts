@@ -1,4 +1,4 @@
-import { ChirpModule } from 'src/chirp/infrastructure/ioc/ChirpModule';
+import { ChirpModule } from '../../../../chirp/infrastructure/ioc/ChirpModule';
 import { Module } from '@nestjs/common'
 
 @Module({
