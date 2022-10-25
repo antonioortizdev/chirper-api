@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post } from '@nestjs/common'
+import { Chirp } from '../../domain/Chirp'
 import { ChirpDto } from '../dto/ChirpDto'
-import { ChirpEntity } from '../../domain/entity/ChirpEntity'
 import { ChirpId } from '../../domain/value-object/ChirpId'
 import { ChirpMessage } from '../../domain/value-object/ChirpMessage'
 import { CreateChirp } from '../../application/use-case/CreateChirp'
@@ -23,7 +23,7 @@ export class ChirpController {
   async create(@Body() chirpDto: ChirpDto) {
     try {
       const { id, message } = chirpDto
-      const savedChirp = await this.createChirpUseCase.run(new ChirpEntity(
+      const savedChirp = await this.createChirpUseCase.run(new Chirp(
         new ChirpId(id),
         new ChirpMessage(message),
       ))

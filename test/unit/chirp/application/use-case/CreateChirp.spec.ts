@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Chirp } from "../../../../../src/chirp/domain/Chirp"
 import { ChirpAlreadyExistsError } from '../../../../../src/chirp/domain/error/ChirpAlreadyExistsError';
-import { ChirpEntity } from "../../../../../src/chirp/domain/entity/ChirpEntity"
 import { ChirpId } from "../../../../../src/chirp/domain/value-object/ChirpId"
 import { ChirpMessage } from "../../../../../src/chirp/domain/value-object/ChirpMessage"
 import { CreateChirp } from "../../../../../src/chirp/application/use-case/CreateChirp"
@@ -8,8 +8,8 @@ import { Repository } from '../../../../../src/shared/domain/repository/interfac
 
 describe('CreateChirp', () => {
   let createChirpUseCase: CreateChirp
-  let chirp: ChirpEntity
-  let repositoryMock: Repository<ChirpEntity>
+  let chirp: Chirp
+  let repositoryMock: Repository<Chirp>
 
   const getUseCaseInstance = async (): Promise<CreateChirp> => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,7 +22,7 @@ describe('CreateChirp', () => {
   }
 
   beforeEach(() => {
-    chirp = new ChirpEntity(
+    chirp = new Chirp(
       new ChirpId('69ead714-65df-419d-b5b5-679bc81bef48'),
       new ChirpMessage('a')
     )
@@ -50,6 +50,5 @@ describe('CreateChirp', () => {
     await expect(() => createChirpUseCase.run(chirp)).rejects.toThrow(ChirpAlreadyExistsError)
     expect(repositoryMock.find).toBeCalledWith({ id: chirp.id.value })
     expect(repositoryMock.save).not.toBeCalled()
-
   })
 })
