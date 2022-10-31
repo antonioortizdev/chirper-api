@@ -10,8 +10,8 @@ export class Chirp implements Entity {
 
   toPrimitives(): object {
     return {
-      id: this.id.value,
-      message: this.message.value
+      id: String(this.id),
+      message: String(this.message)
     }
   }
 }
