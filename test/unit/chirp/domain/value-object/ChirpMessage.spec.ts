@@ -8,4 +8,11 @@ describe('Chirp Message', () => {
     `
     expect(() => new ChirpMessage(aExtremelyLargeText)).toThrow(MaxChirpMessageLengthPassedError)
   })
+
+  it('should return its value as a string', () => {
+    const chirpMessageValue = 'This is my first chirp'
+    const chirpMessage = new ChirpMessage(chirpMessageValue)
+
+    expect(String(chirpMessage)).toBe(chirpMessageValue)
+  })
 })
