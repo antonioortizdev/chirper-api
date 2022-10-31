@@ -1,8 +1,6 @@
 import { Chirp } from "../../../../src/chirp/domain/Chirp"
 import { ChirpId } from "../../../../src/chirp/domain/value-object/ChirpId"
 import { ChirpMessage } from "../../../../src/chirp/domain/value-object/ChirpMessage"
-import { User } from "../../../../src/user/domain/User"
-import { UserEmail } from "../../../../src/user/domain/value-object/UserEmail"
 import { UserId } from "../../../../src/user/domain/value-object/UserId"
 
 describe('Chirp', () => {
