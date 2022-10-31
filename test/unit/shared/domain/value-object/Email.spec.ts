@@ -1,6 +1,6 @@
 import * as emailValidator from 'email-validator'
-import { InvalidEmailError } from '../../../../../src/shared/domain/error/InvalidEmailError'
 import { Email } from "../../../../../src/shared/domain/value-object/Email"
+import { InvalidEmailError } from '../../../../../src/shared/domain/error/InvalidEmailError'
 
 jest.mock('email-validator')
 
@@ -12,20 +12,29 @@ describe('Email value object', () => {
   })
 
   it('should instantiate email value object', () => {
-    const emailValue = 'antonio@hotmail.com'
-
     emailValidateSpy.mockReturnValue(true)
+
+    const emailValue = 'antonio@hotmail.com'
 
     expect(new Email(emailValue).value).toBe(emailValue)
     expect(emailValidateSpy).toBeCalledWith(emailValue)
   })
 
   it('should throw invalid email error on instantation', () => {
-    const notAValidEmail = 'asdf'
-
     emailValidateSpy.mockReturnValue(false)
+
+    const notAValidEmail = 'asdf'
 
     expect(() => new Email(notAValidEmail)).toThrow(InvalidEmailError)
     expect(emailValidateSpy).toBeCalledWith(notAValidEmail)
+  })
+
+  it('should return its value as a string', () => {
+    emailValidateSpy.mockReturnValue(true)
+
+    const emailValue = 'antonio@hotmail.com'
+    const email = new Email(emailValue)
+
+    expect(String(email)).toBe(emailValue)
   })
 })

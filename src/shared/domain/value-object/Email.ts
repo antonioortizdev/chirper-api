@@ -8,6 +8,10 @@ export class Email {
     this.value = value
   }
 
+  toString(): string {
+    return this.value
+  }
+
   private ensureIsValidEmail(value: string) {
     if(!validate(value)) {
       throw new InvalidEmailError(value)
