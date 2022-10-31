@@ -5,6 +5,7 @@ import { ChirpId } from "../../../../../src/chirp/domain/value-object/ChirpId"
 import { ChirpMessage } from "../../../../../src/chirp/domain/value-object/ChirpMessage"
 import { CreateChirp } from "../../../../../src/chirp/application/use-case/CreateChirp"
 import { Repository } from '../../../../../src/shared/domain/repository/interface/Repository';
+import { UserId } from '../../../../../src/user/domain/value-object/UserId';
 
 describe('CreateChirp', () => {
   let createChirpUseCase: CreateChirp
@@ -24,6 +25,7 @@ describe('CreateChirp', () => {
   beforeEach(() => {
     chirp = new Chirp(
       new ChirpId('69ead714-65df-419d-b5b5-679bc81bef48'),
+      new UserId('4ca63255-b896-44ec-baae-7f644a835211'),
       new ChirpMessage('a')
     )
   })
