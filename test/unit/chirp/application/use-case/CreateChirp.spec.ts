@@ -1,56 +1,29 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { Chirp } from "../../../../../src/chirp/domain/Chirp"
-import { ChirpAlreadyExistsError } from '../../../../../src/chirp/domain/error/ChirpAlreadyExistsError';
-import { ChirpId } from "../../../../../src/chirp/domain/value-object/ChirpId"
-import { ChirpMessage } from "../../../../../src/chirp/domain/value-object/ChirpMessage"
-import { CreateChirp } from "../../../../../src/chirp/application/use-case/CreateChirp"
-import { Repository } from '../../../../../src/shared/domain/repository/interface/Repository';
-import { UserId } from '../../../../../src/user/domain/value-object/UserId';
+import { Chirp } from "../../../../../src/chirp/domain/Chirp";
+import { ChirpAlreadyExistsError } from "../../../../../src/chirp/domain/error/ChirpAlreadyExistsError";
+import { CreateChirp } from "../../../../../src/chirp/application/use-case/CreateChirp";
+import { Repository } from "../../../../../src/shared/domain/repository/interface/Repository";
 
 describe('CreateChirp', () => {
-  let createChirpUseCase: CreateChirp
-  let chirp: Chirp
-  let repositoryMock: Repository<Chirp>
-
-  const getUseCaseInstance = async (): Promise<CreateChirp> => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [CreateChirp, {
-        provide: Repository,
-        useValue: repositoryMock
-      }],
-    }).compile()
-    return module.get<CreateChirp>(CreateChirp)
-  }
+  let createChirp: CreateChirp;
+  let repository: Repository<Chirp>;
 
   beforeEach(() => {
-    chirp = new Chirp(
-      new ChirpId('69ead714-65df-419d-b5b5-679bc81bef48'),
-      new UserId('4ca63255-b896-44ec-baae-7f644a835211'),
-      new ChirpMessage('a')
-    )
-  })
+    repository = {
+      save: jest.fn(),
+      find: jest.fn()
+    } as any;
+    createChirp = new CreateChirp(repository);
+  });
 
-  it('should create a new chirp', async () => {
-    repositoryMock = {
-      find: jest.fn().mockReturnValue([]),
-      save: jest.fn().mockReturnValue(chirp)
-    }
-    createChirpUseCase = await getUseCaseInstance()
+  it('should throw an error when the chirp already exists', async () => {
+    (repository.find as jest.Mock).mockResolvedValue([{ id: '1' }]);
+    await expect(createChirp.run({ id: '1' })).rejects.toThrowError(ChirpAlreadyExistsError);
+  });
 
-    await expect(createChirpUseCase.run(chirp)).resolves.toBe(chirp)
-    expect(repositoryMock.find).toBeCalledWith({ id: chirp.id.value })
-    expect(repositoryMock.save).toBeCalledWith(chirp)
-  })
-  
-  it('should throw a chirp already exists error', async () => {
-    repositoryMock = {
-      find: jest.fn().mockReturnValue([chirp]),
-      save: jest.fn()
-    }
-    createChirpUseCase = await getUseCaseInstance()
-
-    await expect(() => createChirpUseCase.run(chirp)).rejects.toThrow(ChirpAlreadyExistsError)
-    expect(repositoryMock.find).toBeCalledWith({ id: chirp.id.value })
-    expect(repositoryMock.save).not.toBeCalled()
-  })
-})
+  it('should save the chirp when it does not exist', async () => {
+    (repository.find as jest.Mock).mockResolvedValue([]);
+    const chirp = { id: '1' };
+    await createChirp.run(chirp);
+    expect(repository.save).toHaveBeenCalledWith(chirp);
+  });
+});

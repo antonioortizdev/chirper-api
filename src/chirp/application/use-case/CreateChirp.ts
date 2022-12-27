@@ -1,5 +1,6 @@
+
+import { Chirp, ChirpData } from '../../domain/Chirp';
 import { Inject, Injectable } from '@nestjs/common';
-import { Chirp } from '../../domain/Chirp';
 import { ChirpAlreadyExistsError } from '../../domain/error/ChirpAlreadyExistsError';
 import { Repository } from "../../../shared/domain/repository/interface/Repository";
 
@@ -9,7 +10,8 @@ export class CreateChirp {
     @Inject(Repository) private repository: Repository<Chirp>
   ) {}
 
-  async run(chirp: Chirp): Promise<Chirp> {
+  async run(chirpData: ChirpData): Promise<Chirp> {
+    const chirp = Chirp.fromPrimitives(chirpData);
     await this.ensureChirpDoesNotExist(chirp)
 
     return this.repository.save(chirp)
